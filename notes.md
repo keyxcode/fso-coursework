@@ -3,7 +3,7 @@
 - Never define components inside of another component
 - A state update in React happens asynchronously, i.e. not immediately but "at some point" before the component is rendered again.
 
-# State
+# States
 
 - We must never mutate states directly in React
 
