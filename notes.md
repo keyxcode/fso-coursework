@@ -42,3 +42,7 @@
 - Every resource has a unique address associated with it - its URL
 - Resources are fetched from the server with HTTP GET requests
 - Creating a new resource is done by making an HTTP POST request to the resource URL according to the REST convention
+
+# Thinking in React
+
+- Create individual components that are as independent and reusable as possible => HTML, CSS, JS all in one component
