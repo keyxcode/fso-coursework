@@ -3,61 +3,61 @@
     {
       "id": 1,
       "content": "HTML is easy",
-      "important": false
+      "important": true
     },
     {
       "id": 2,
       "content": "Browser can execute only JavaScript",
-      "important": true
+      "important": false
     },
     {
       "id": 3,
       "content": "GET and POST are the most important methods of HTTP protocol",
-      "important": true
+      "important": false
     },
     {
       "content": "fas",
-      "important": false,
+      "important": true,
       "id": 4
     },
     {
       "content": "asf",
-      "important": true,
+      "important": false,
       "id": 5
     },
     {
       "content": "fasfd",
-      "important": true,
+      "important": false,
       "id": 6
     },
     {
       "content": "adsf",
-      "important": true,
+      "important": false,
       "id": 7
     },
     {
       "content": "dfasd",
-      "important": false,
+      "important": true,
       "id": 8
     },
     {
       "content": "dafs",
-      "important": false,
+      "important": true,
       "id": 9
     },
     {
       "content": "fas'",
-      "important": false,
+      "important": true,
       "id": 10
     },
     {
       "content": "fasd",
-      "important": false,
+      "important": true,
       "id": 11
     },
     {
       "content": "asdfa",
-      "important": true,
+      "important": false,
       "id": 12
     },
     {
@@ -67,7 +67,7 @@
     },
     {
       "content": "fasdfas",
-      "important": false,
+      "important": true,
       "id": 14
     }
   ]

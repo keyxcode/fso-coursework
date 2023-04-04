@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Note from "./components/Note";
 import noteService from "./services/notes";
+import "./index.css";
 
 const App = () => {
   // Store the notes in the App component's state
