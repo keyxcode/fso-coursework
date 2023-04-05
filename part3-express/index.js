@@ -18,6 +18,7 @@ let notes = [
     content: "GET and POST are the most important methods of HTTP protocol",
     important: true,
   },
+  { id: 4, content: "test", important: true },
 ];
 
 // The app.get(route, (request, response)) event handler accepts 2 params:
@@ -51,6 +52,17 @@ app.get("/api/notes/:id", (request, response) => {
   } else {
     response.status(404).end();
   }
+});
+
+// route for deleting resources
+app.delete("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  notes = notes.filter((note) => note.id !== id);
+
+  // If deleting is successful, we response with code 204 no content and return no data with the response
+  // There's no consensus on what status should be returned if the resource does note exist
+  // we could either use 404 or 204. Here we use 204 for simplicity sake
+  response.status(204).end();
 });
 
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
