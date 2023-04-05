@@ -46,3 +46,7 @@
 # Thinking in React
 
 - Create individual components that are as independent and reusable as possible => HTML, CSS, JS all in one component
+
+# npm
+
+- It's customary to run tasks as npm scripts
