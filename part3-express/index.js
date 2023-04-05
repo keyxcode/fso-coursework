@@ -38,6 +38,21 @@ app.get("/api/notes", (request, response) => {
   response.json(notes);
 });
 
+// We can define parameters for routes in express by the colon :syntax
+app.get("/api/notes/:id", (request, response) => {
+  // the id param can be accessed through the request object
+  // be careful with the typing here, the returned param is type string
+  const id = Number(request.params.id);
+  const note = notes.find((note) => note.id === id);
+
+  // Remember to correctly handle the request status if there's an error
+  if (note) {
+    response.json(note);
+  } else {
+    response.status(404).end();
+  }
+});
+
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

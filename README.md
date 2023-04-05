@@ -38,10 +38,17 @@
 
 # REST
 
+- Representational State Transfer introduced in 2000 by Roy Fielding
+- Interfaces that are intended for programmatic use
+- When applied to web services, we take a more narrow view by only concerning oursleves with how RESTful APIs are typically understood in web apps
 - In REST terminology, we refer to individual data objects as _resources_
 - Every resource has a unique address associated with it - its URL
-- Resources are fetched from the server with HTTP GET requests
-- Creating a new resource is done by making an HTTP POST request to the resource URL according to the REST convention
+  - One convention for creating unique addresses is to combine the name of the resource type with the resource's unique identifier.
+  - For example: root URL is _www.example.com/api_
+  - If we define the resource type of note to be notes, then the address of a note resource with the identifier 10, has the unique address _www.example.com/api/notes/10_
+  - The URL for the entire collection of all note resources is _www.example.com/api/notes_
+- We can execute different operations on the resources, defined by HTTP verb
+  ![image](imgs/rest-operations.png)
 
 # Thinking in React
 
