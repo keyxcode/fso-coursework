@@ -50,6 +50,25 @@
 - We can execute different operations on the resources, defined by HTTP verb
   ![image](imgs/rest-operations.png)
 
+# HTTP standards
+
+- _safety_:
+  - The executing request must not cause any side effects on the server.
+    - Database must not change as a result of the request.
+    - The response must only return data that already exists on the server.
+  - GET and HEAD ought to be considered "safe".
+    - HEAD should work exactly like GET but it does not return anything but the status code and response headers.
+- _idempotency_:
+  - the side-effects of N > 0 identical requests is the same as for a single request.
+  - The methods GET, HEAD, PUT and DELETE share this property.
+- POST is the only HTTP request type that is neither _safe_ nor _idempotent_.
+
+# Middleware
+
+- Functions that can be used for handling request and response objects.
+- Middleware functions have to be taken into use before routes if we want them to be executed before the route event handlers are called.
+- Middleware functions are called in the order that they're taken into use with the express server object's use() method.
+
 # Thinking in React
 
 - Create individual components that are as independent and reusable as possible => HTML, CSS, JS all in one component
