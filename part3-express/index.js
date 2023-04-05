@@ -2,6 +2,10 @@ const express = require("express");
 // express is a function that is used to create an express application
 const app = express();
 
+// use json-parser to access the data sent in a request easily
+// takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
+app.use(express.json());
+
 let notes = [
   {
     id: 1,
@@ -63,6 +67,35 @@ app.delete("/api/notes/:id", (request, response) => {
   // There's no consensus on what status should be returned if the resource does note exist
   // we could either use 404 or 204. Here we use 204 for simplicity sake
   response.status(204).end();
+});
+
+// Helper function to create note id on the server
+const generateId = () => {
+  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+  return maxId + 1;
+};
+
+// route for adding a note
+app.post("/api/notes", (request, response) => {
+  const body = request.body;
+
+  if (!body.content) {
+    // note that return is crucial so that the function doesn't go on to save the bad note
+    return response.status(400).json({
+      error: "content missing",
+    });
+  }
+
+  const note = {
+    ...body,
+    // when the important property is false, this expression returns the false from the right-hand side
+    important: body.important || false,
+    id: generateId(),
+  };
+
+  notes = notes.concat(note);
+
+  response.json(note);
 });
 
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
