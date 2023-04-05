@@ -6,6 +6,17 @@ const app = express();
 // takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
 app.use(express.json());
 
+// Custom middleware to log request info
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
+  // The next function yields control to the next middleware.
+  next();
+};
+app.use(requestLogger);
+
 let notes = [
   {
     id: 1,
@@ -97,6 +108,13 @@ app.post("/api/notes", (request, response) => {
 
   response.json(note);
 });
+
+// This middleware will be used for catching requests made to non-existent routes
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
 const PORT = 3001;
