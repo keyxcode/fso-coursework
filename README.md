@@ -9,7 +9,7 @@
 
 # Hooks
 
-- useState() as well as the useEffect() must not be called from inside of:
+- `useState()` as well as the `useEffect()` must not be called from inside of:
   - a loop
   - a conditional expression
   - any place that is not a function defining a component
@@ -86,6 +86,7 @@
 
 # Same-origin policy and Cross-Origin Resrouce Sharing (CORS)
 
+- Same-origin policy is a set of rules implemented by _browsers_ to make it prevent a website from one URL's origin to access resources on a website from another URL's origin.
 - A URL's origin is defined by the combination of protocol (AKA scheme), hostname, and port.
 
   ````
@@ -98,7 +99,7 @@
 
 - If the resource is fetched using a URL that doesn't share the same origin(scheme, host, port) as the source HTML, the browser will have to check the Access-Control-Allow-origin response header. If it contains \* or the URL of the source HTML, the browser will process the response, otherwise the browser will refuse to process it and throw an error.
 - CORS is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain outside the domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.
-- Practically, in Express we solve this issue by installing the cors middleware: `npm install cors`
+- Practically, in Express we solve this issue by using the cors middleware: `npm install cors`
 
 # npm
 

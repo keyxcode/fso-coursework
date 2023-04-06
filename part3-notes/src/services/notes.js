@@ -1,4 +1,5 @@
 import axios from "axios";
+// both the frontend and the backend are at the same address, we can declare baseUrl as a relative URL.
 const baseUrl = "/api/notes";
 
 const getAll = () => {
