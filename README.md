@@ -36,6 +36,10 @@
   2. The promise is fulfilled: It means that the operation has been completed and the final value is available, which generally is a successful operation. This state is sometimes also called resolved.
   3. The promise is rejected: It means that an error prevented the final value from being determined, which generally represents a failed operation.
 
+# Thinking in React
+
+- Create individual components that are as independent and reusable as possible => HTML, CSS, JS all in one component
+
 # REST
 
 - Representational State Transfer introduced in 2000 by Roy Fielding
@@ -80,9 +84,21 @@
   - Since the middleware has access to both the request and response objects, and the ability to continue or halt the middleware processing from one function to the next, it's easy to attach information that will be used further on down the line or bail out entirely when something goes wrong.
   - Middleware functions are called in the order that they're taken into use with the express server object's use() method.
 
-# Thinking in React
+# Same-origin policy and Cross-Origin Resrouce Sharing (CORS)
 
-- Create individual components that are as independent and reusable as possible => HTML, CSS, JS all in one component
+- A URL's origin is defined by the combination of protocol (AKA scheme), hostname, and port.
+
+  ````
+  http://example.com:80/index.html
+
+  protocol: http
+  host: example.com
+  port: 80```
+  ````
+
+- If the resource is fetched using a URL that doesn't share the same origin(scheme, host, port) as the source HTML, the browser will have to check the Access-Control-Allow-origin response header. If it contains \* or the URL of the source HTML, the browser will process the response, otherwise the browser will refuse to process it and throw an error.
+- CORS is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain outside the domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.
+- Practically, in Express we solve this issue by installing the cors middleware: `npm install cors`
 
 # npm
 

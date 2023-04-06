@@ -1,10 +1,19 @@
 const express = require("express");
+const cors = require("cors");
 // express is a function that is used to create an express application
 const app = express();
 
 // use json-parser middleware to access the data sent in a request easily
 // takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
 app.use(express.json());
+
+// middleware to allow for requests from all origins
+app.use(cors());
+
+// middleware to serve static files like JS, CSS, images from the frontend build
+// whenever express gets an HTTP GET request it will first check if the build directory contains a file corresponding to the request's address.
+// If a correct file is found, express will return it.
+app.use(express.static("build"));
 
 // Custom middleware to log request info
 // In express, middleware is a function that receives 3 params: request object, response object and a next() function
@@ -118,5 +127,5 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
