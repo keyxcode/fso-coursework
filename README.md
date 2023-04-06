@@ -104,3 +104,4 @@
 # npm
 
 - It's customary to run tasks as npm scripts
+- To debug node app in the browser: `node --inspect index.js`
