@@ -63,11 +63,22 @@
   - The methods GET, HEAD, PUT and DELETE share this property.
 - POST is the only HTTP request type that is neither _safe_ nor _idempotent_.
 
+# Express
+
+- In express, routes get _request_ and _response_ objects that have information about how to process the request and how to render the response
+  - _request_ will have information like query parameters (the part after the & in a URL), a body if you need to get form POST info, accepted language or encoding information, etc.
+  - _response_ is ultimately responsible for deciding what data (typically a string of HTML or JSON, etc) gets sent to the client.
+- Between those 2 endpoints, we might need to do some stuff: hit a database, authenticate a user, validate a token, select display text from a localization tool, etc. Most of the time, those processes are repeated on every route and every request. In order to keep them flexible, reusable, ordered and so on, each type of processing can be broken out into a _Middleware_ function.
+
 # Middleware
 
-- Functions that can be used for handling request and response objects.
-- Middleware functions have to be taken into use before routes if we want them to be executed before the route event handlers are called.
-- Middleware functions are called in the order that they're taken into use with the express server object's use() method.
+- In general, it's a software that provides services to other software by extending what's provided by the level below it.
+- In Express, it's a function that has access to the _req_, _res_, objects and the _next()_ function.
+- In essence, middleware sits in between the client and the final handling of the request in your server and processes it.
+  - Middleware functions have to be taken into use before routes if we want them to be executed before the route event handlers are called.
+  - Simply place all of the middleware needed for a request right before the final "endware" (ie, the final function that actually sends a response).
+  - Since the middleware has access to both the request and response objects, and the ability to continue or halt the middleware processing from one function to the next, it's easy to attach information that will be used further on down the line or bail out entirely when something goes wrong.
+  - Middleware functions are called in the order that they're taken into use with the express server object's use() method.
 
 # Thinking in React
 

@@ -2,11 +2,12 @@ const express = require("express");
 // express is a function that is used to create an express application
 const app = express();
 
-// use json-parser to access the data sent in a request easily
+// use json-parser middleware to access the data sent in a request easily
 // takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
 app.use(express.json());
 
 // Custom middleware to log request info
+// In express, middleware is a function that receives 3 params: request object, response object and a next() function
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
   console.log("Path:  ", request.path);
