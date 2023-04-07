@@ -1,5 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const Note = require("./models/note");
+
 // express is a function that is used to create an express application
 const app = express();
 
@@ -27,24 +30,25 @@ const requestLogger = (request, response, next) => {
 };
 app.use(requestLogger);
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-  { id: 4, content: "test", important: true },
-];
+// Simple storage
+// let notes = [
+//   {
+//     id: 1,
+//     content: "HTML is easy",
+//     important: true,
+//   },
+//   {
+//     id: 2,
+//     content: "Browser can execute only JavaScript",
+//     important: false,
+//   },
+//   {
+//     id: 3,
+//     content: "GET and POST are the most important methods of HTTP protocol",
+//     important: true,
+//   },
+//   { id: 4, content: "test", important: true },
+// ];
 
 // The app.get(route, (request, response)) event handler accepts 2 params:
 //      The request parameter contains all of the information of the HTTP request.
@@ -61,7 +65,11 @@ app.get("/", (request, response) => {
 app.get("/api/notes", (request, response) => {
   // express automatically sets the Content-Type header to application/json
   // express also JSON.stringify the notes object automatically
-  response.json(notes);
+  // response.json(notes);
+
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 // We can define parameters for routes in express by the colon :syntax
