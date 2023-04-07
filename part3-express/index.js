@@ -75,16 +75,9 @@ app.get("/api/notes", (request, response) => {
 // We can define parameters for routes in express by the colon :syntax
 app.get("/api/notes/:id", (request, response) => {
   // the id param can be accessed through the request object
-  // be careful with the typing here, the returned param is type string
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-
-  // Remember to correctly handle the request status if there's an error
-  if (note) {
+  Note.findById(request.params.id).then((note) => {
     response.json(note);
-  } else {
-    response.status(404).end();
-  }
+  });
 });
 
 // route for deleting resources
@@ -98,33 +91,26 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
-// Helper function to create note id on the server
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
-
 // route for adding a note
 app.post("/api/notes", (request, response) => {
   const body = request.body;
 
-  if (!body.content) {
+  if (body.content === "undefined") {
     // note that return is crucial so that the function doesn't go on to save the bad note
     return response.status(400).json({
       error: "content missing",
     });
   }
 
-  const note = {
-    ...body,
+  const note = new Note({
+    content: body.content,
     // when the important property is false, this expression returns the false from the right-hand side
     important: body.important || false,
-    id: generateId(),
-  };
+  });
 
-  notes = notes.concat(note);
-
-  response.json(note);
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 // This middleware will be used for catching requests made to non-existent routes
