@@ -68,9 +68,9 @@ app.get("/api/notes/:id", (request, response, next) => {
 });
 
 // route for deleting resources
-app.delete("/api/notes/:id", (request, response) => {
+app.delete("/api/notes/:id", (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
-    .then((result) => {
+    .then(() => {
       // If deleting is successful, we response with code 204 no content and return no data with the response
       // There's no consensus on what status should be returned if the resource does note exist
       // we could either use 404 or 204. Here we use 204 for simplicity sake
@@ -99,7 +99,7 @@ app.put("/api/notes/:id", (request, response, next) => {
 
 // route for adding a note
 app.post("/api/notes", (request, response, next) => {
-  const body = request.body;
+  const { body } = request;
 
   const note = new Note({
     content: body.content,
@@ -128,11 +128,12 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
+  }
+  if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message });
   }
 
-  next(error);
+  return next(error);
 };
 app.use(errorHandler);
 
