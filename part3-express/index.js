@@ -6,17 +6,14 @@ const Note = require("./models/note");
 // express is a function that is used to create an express application
 const app = express();
 
-// use json-parser middleware to access the data sent in a request easily
-// takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
-app.use(express.json());
-
-// middleware to allow for requests from all origins
-app.use(cors());
-
 // middleware to serve static files like JS, CSS, images from the frontend build
 // whenever express gets an HTTP GET request it will first check if the build directory contains a file corresponding to the request's address.
 // If a correct file is found, express will return it.
 app.use(express.static("build"));
+
+// use json-parser middleware to access the data sent in a request easily
+// takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
+app.use(express.json());
 
 // Custom middleware to log request info
 // In express, middleware is a function that receives 3 params: request object, response object and a next() function
@@ -30,25 +27,8 @@ const requestLogger = (request, response, next) => {
 };
 app.use(requestLogger);
 
-// Simple storage
-// let notes = [
-//   {
-//     id: 1,
-//     content: "HTML is easy",
-//     important: true,
-//   },
-//   {
-//     id: 2,
-//     content: "Browser can execute only JavaScript",
-//     important: false,
-//   },
-//   {
-//     id: 3,
-//     content: "GET and POST are the most important methods of HTTP protocol",
-//     important: true,
-//   },
-//   { id: 4, content: "test", important: true },
-// ];
+// middleware to allow for requests from all origins
+app.use(cors());
 
 // The app.get(route, (request, response)) event handler accepts 2 params:
 //      The request parameter contains all of the information of the HTTP request.
@@ -65,7 +45,6 @@ app.get("/", (request, response) => {
 app.get("/api/notes", (request, response) => {
   // express automatically sets the Content-Type header to application/json
   // express also JSON.stringify the notes object automatically
-  // response.json(notes);
 
   Note.find({}).then((notes) => {
     response.json(notes);
@@ -73,22 +52,49 @@ app.get("/api/notes", (request, response) => {
 });
 
 // We can define parameters for routes in express by the colon :syntax
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
   // the id param can be accessed through the request object
-  Note.findById(request.params.id).then((note) => {
-    response.json(note);
-  });
+  Note.findById(request.params.id)
+    .then((note) => {
+      if (note) {
+        response.json(note);
+      } else {
+        // handle note doesn't exist
+        response.status(404).end();
+      }
+    })
+    // pass any other type of error to error-handling middleware
+    .catch((error) => next(error));
 });
 
 // route for deleting resources
 app.delete("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  notes = notes.filter((note) => note.id !== id);
+  Note.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      // If deleting is successful, we response with code 204 no content and return no data with the response
+      // There's no consensus on what status should be returned if the resource does note exist
+      // we could either use 404 or 204. Here we use 204 for simplicity sake
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+});
 
-  // If deleting is successful, we response with code 204 no content and return no data with the response
-  // There's no consensus on what status should be returned if the resource does note exist
-  // we could either use 404 or 204. Here we use 204 for simplicity sake
-  response.status(204).end();
+app.put("/api/notes/:id", (request, response, next) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  // Note that this method receives a regular JavaScript object as its parameter
+  // and NOT a new note object created with the Note constructor
+  // Also note that we set {new: true} to receive the newly-edited note, instead of the old note by default
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
 });
 
 // route for adding a note
@@ -117,8 +123,20 @@ app.post("/api/notes", (request, response) => {
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
-
 app.use(unknownEndpoint);
+
+// This middleware will be used to handle errors. Note that it takes 4 params
+// Note that this has to be the last middleware
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+app.use(errorHandler);
 
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
 const PORT = process.env.PORT || 3001;

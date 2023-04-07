@@ -19,3 +19,12 @@ Content-Type: application/json
 {
     "content": "I don't have important attribute"
 }
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "Update me",
+    "important": true
+}
