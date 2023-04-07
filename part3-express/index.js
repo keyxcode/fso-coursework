@@ -98,15 +98,8 @@ app.put("/api/notes/:id", (request, response, next) => {
 });
 
 // route for adding a note
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
   const body = request.body;
-
-  if (body.content === "undefined") {
-    // note that return is crucial so that the function doesn't go on to save the bad note
-    return response.status(400).json({
-      error: "content missing",
-    });
-  }
 
   const note = new Note({
     content: body.content,
@@ -114,9 +107,12 @@ app.post("/api/notes", (request, response) => {
     important: body.important || false,
   });
 
-  note.save().then((savedNote) => {
-    response.json(savedNote);
-  });
+  note
+    .save()
+    .then((savedNote) => {
+      response.json(savedNote);
+    })
+    .catch((error) => next(error));
 });
 
 // This middleware will be used for catching requests made to non-existent routes
@@ -132,6 +128,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
