@@ -80,17 +80,17 @@ app.delete("/api/notes/:id", (request, response) => {
 });
 
 app.put("/api/notes/:id", (request, response, next) => {
-  const body = request.body;
-
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
+  const { content, important } = request.body;
 
   // Note that this method receives a regular JavaScript object as its parameter
   // and NOT a new note object created with the Note constructor
   // Also note that we set {new: true} to receive the newly-edited note, instead of the old note by default
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    // this config lets db validators run
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedNote) => {
       response.json(updatedNote);
     })
