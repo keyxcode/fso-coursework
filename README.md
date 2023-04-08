@@ -101,7 +101,59 @@
 - CORS is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain outside the domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.
 - Practically, in Express we solve this issue by using the cors middleware: `npm install cors`
 
-# npm
+# Node/ Express project tips
 
 - It's customary to run tasks as npm scripts
 - To debug node app in the browser: `node --inspect index.js`
+- Useful commands
+
+  ```
+  npm init -y
+  npm install express
+  npm install --save-dev nodemon
+  npm install cors
+  npm install mongoose
+  npm install dotenv
+  ```
+
+  - Useful configs
+
+  ```
+  {
+    "scripts": {
+      "start": "node index.js",
+      "dev": "nodemon index.js",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
+      "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+      "lint": "eslint ."
+    },
+    "proxy": "http://localhost:3001"
+  }
+  ```
+
+  - Linting and formatting
+
+  ```
+    npm install eslint --save-dev
+    npx eslint --init
+    npm install --save-dev --save-exact prettier
+    echo {}> .prettierrc.json
+    npm install --save-dev eslint-config-prettier
+  ```
+
+  ```
+  {
+    "rules" : {
+      "no-console": "off"
+    },
+    "extends": ["some-other-config-you-use", "prettier"]
+  }
+  ```
+
+  - Potential ignores
+
+  ```
+    build
+    node_modules/
+  ```
