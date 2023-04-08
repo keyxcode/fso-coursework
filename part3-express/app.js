@@ -1,11 +1,51 @@
 const express = require("express");
+
+const app = express(); // express is a function that is used to create an express application
+
 const cors = require("cors");
+const mongoose = require("mongoose");
+const config = require("./utils/config");
+const notesRouter = require("./controllers/notes");
+const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 
-const Note = require("./models/note");
+mongoose.set("strictQuery", false);
 
-// express is a function that is used to create an express application
-const app = express();
+logger.info("connecting to", config.MONGODB_URI);
+
+mongoose
+  .connect(config.MONGODB_URI)
+  .then(() => {
+    logger.info("connected to MongoDB");
+  })
+  .catch((error) => {
+    logger.info("error connecting to MongoDB:", error.message);
+  });
+
+const noteSchema = new mongoose.Schema({
+  content: {
+    // include validation rules
+    type: String,
+    minLength: 5,
+    required: true,
+  },
+  important: Boolean,
+});
+
+// Use the toJSON method to format the returned objects of this schema
+noteSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    // Transform the default id object to string and add that property to the returned object
+    returnedObject.id = returnedObject._id.toString();
+
+    // Remove unwanted properties
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+// middleware to allow for requests from all origins
+app.use(cors());
 
 // middleware to serve static files like JS, CSS, images from the frontend build
 // whenever express gets an HTTP GET request it will first check if the build directory contains a file corresponding to the request's address.
@@ -16,124 +56,11 @@ app.use(express.static("build"));
 // takes the JSON data of request => transforms to JS object => attaches it to the body of the request object
 app.use(express.json());
 
-// Custom middleware to log request info
-// In express, middleware is a function that receives 3 params: request object, response object and a next() function
-const requestLogger = (request, response, next) => {
-  logger.info("Method:", request.method);
-  logger.info("Path:  ", request.path);
-  logger.info("Body:  ", request.body);
-  logger.info("---");
-  // The next function yields control to the next middleware.
-  next();
-};
-app.use(requestLogger);
+app.use(middleware.requestLogger);
 
-// middleware to allow for requests from all origins
-app.use(cors());
+app.use("/api/notes", notesRouter);
 
-// The app.get(route, (request, response)) event handler accepts 2 params:
-//      The request parameter contains all of the information of the HTTP request.
-//      the second response parameter is used to define how the request is responded to.
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
-// defines an event handler that is used to handle HTTP GET requests made to the application's / root
-app.get("/", (request, response) => {
-  // the request is answered by using the send method of the response object
-  // since the parameter is a string, express automatically sets ontent-Type header to text/html.
-  response.send("<h1>Hello World!</h1>");
-});
-
-// defines an event handler that handles HTTP GET requests made to the notes path of the application
-app.get("/api/notes", (request, response) => {
-  // express automatically sets the Content-Type header to application/json
-  // express also JSON.stringify the notes object automatically
-
-  Note.find({}).then((notes) => {
-    response.json(notes);
-  });
-});
-
-// We can define parameters for routes in express by the colon :syntax
-app.get("/api/notes/:id", (request, response, next) => {
-  // the id param can be accessed through the request object
-  Note.findById(request.params.id)
-    .then((note) => {
-      if (note) {
-        response.json(note);
-      } else {
-        // handle note doesn't exist
-        response.status(404).end();
-      }
-    })
-    // pass any other type of error to error-handling middleware
-    .catch((error) => next(error));
-});
-
-// route for deleting resources
-app.delete("/api/notes/:id", (request, response, next) => {
-  Note.findByIdAndRemove(request.params.id)
-    .then(() => {
-      // If deleting is successful, we response with code 204 no content and return no data with the response
-      // There's no consensus on what status should be returned if the resource does note exist
-      // we could either use 404 or 204. Here we use 204 for simplicity sake
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
-});
-
-app.put("/api/notes/:id", (request, response, next) => {
-  const { content, important } = request.body;
-
-  // Note that this method receives a regular JavaScript object as its parameter
-  // and NOT a new note object created with the Note constructor
-  // Also note that we set {new: true} to receive the newly-edited note, instead of the old note by default
-  Note.findByIdAndUpdate(
-    request.params.id,
-    { content, important },
-    // this config lets db validators run
-    { new: true, runValidators: true, context: "query" }
-  )
-    .then((updatedNote) => {
-      response.json(updatedNote);
-    })
-    .catch((error) => next(error));
-});
-
-// route for adding a note
-app.post("/api/notes", (request, response, next) => {
-  const { body } = request;
-
-  const note = new Note({
-    content: body.content,
-    // when the important property is false, this expression returns the false from the right-hand side
-    important: body.important || false,
-  });
-
-  note
-    .save()
-    .then((savedNote) => {
-      response.json(savedNote);
-    })
-    .catch((error) => next(error));
-});
-
-// This middleware will be used for catching requests made to non-existent routes
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
-app.use(unknownEndpoint);
-
-// This middleware will be used to handle errors. Note that it takes 4 params
-// Note that this has to be the last middleware
-const errorHandler = (error, request, response, next) => {
-  logger.error(error.message);
-
-  if (error.name === "CastError") {
-    return response.status(400).send({ error: "malformatted id" });
-  }
-  if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
-  }
-
-  return next(error);
-};
-app.use(errorHandler);
+module.exports = app;
