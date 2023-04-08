@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const logger = require("./utils/logger");
+
 const Note = require("./models/note");
 
 // express is a function that is used to create an express application
@@ -18,10 +20,10 @@ app.use(express.json());
 // Custom middleware to log request info
 // In express, middleware is a function that receives 3 params: request object, response object and a next() function
 const requestLogger = (request, response, next) => {
-  console.log("Method:", request.method);
-  console.log("Path:  ", request.path);
-  console.log("Body:  ", request.body);
-  console.log("---");
+  logger.info("Method:", request.method);
+  logger.info("Path:  ", request.path);
+  logger.info("Body:  ", request.body);
+  logger.info("---");
   // The next function yields control to the next middleware.
   next();
 };
@@ -124,7 +126,7 @@ app.use(unknownEndpoint);
 // This middleware will be used to handle errors. Note that it takes 4 params
 // Note that this has to be the last middleware
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  logger.error(error.message);
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
@@ -139,4 +141,4 @@ app.use(errorHandler);
 
 // bind the http server assigned to the app variable to listen to HTTP request sent to port 3001
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
