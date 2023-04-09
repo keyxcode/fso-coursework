@@ -114,6 +114,7 @@
   npm install cors
   npm install mongoose
   npm install dotenv
+  npm install --save-dev jest
   ```
 
   - Useful configs
@@ -123,12 +124,15 @@
     "scripts": {
       "start": "node index.js",
       "dev": "nodemon index.js",
-      "test": "echo \"Error: no test specified\" && exit 1",
       "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
       "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-      "lint": "eslint ."
+      "lint": "eslint .",
+      "test": "jest --verbose"
     },
-    "proxy": "http://localhost:3001"
+    "proxy": "http://localhost:3001",
+    "jest": {
+      "testEnvironment": "node"
+    }
   }
   ```
 
@@ -144,6 +148,12 @@
 
   ```
   {
+    'env': {
+      'commonjs': true,
+      'es2021': true,
+      'node': true,
+      'jest': true,
+    },
     "rules" : {
       "no-console": "off"
     },
