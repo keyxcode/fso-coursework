@@ -9,10 +9,14 @@ const api = supertest(app);
 // beforeEach() is used to initialize the db before each test
 beforeEach(async () => {
   await Note.deleteMany({});
-  let noteObject = new Note(helper.initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(helper.initialNotes[1]);
-  await noteObject.save();
+
+  const noteObjects = helper.initialNotes.map((note) => new Note(note));
+  const promiseArray = noteObjects.map((note) => note.save());
+
+  // Promise.all() transforms an array of promises into a single promise
+  // => the line below waits until every promise for saving a note is fulfilled
+  // This method executes the promsises in parallel
+  await Promise.all(promiseArray);
 }, 100000);
 
 test("notes are returned as json", async () => {
