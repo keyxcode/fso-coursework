@@ -2,6 +2,7 @@ const express = require("express");
 
 const app = express(); // express is a function that is used to create an express application
 
+require("express-async-errors");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const config = require("./utils/config");

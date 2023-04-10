@@ -15,19 +15,15 @@ notesRouter.get("/", async (request, response) => {
 });
 
 // We can define parameters for routes in express by the colon :syntax
-notesRouter.get("/:id", (request, response, next) => {
+notesRouter.get("/:id", async (request, response) => {
   // the id param can be accessed through the request object
-  Note.findById(request.params.id)
-    .then((note) => {
-      if (note) {
-        response.json(note);
-      } else {
-        // handle note doesn't exist
-        response.status(404).end();
-      }
-    })
-    // pass any other type of error to error-handling middleware
-    .catch((error) => next(error));
+  const note = await Note.findById(request.params.id);
+  if (note) {
+    response.json(note);
+  } else {
+    // handle note doesn't exist
+    response.status(404).end();
+  }
 });
 
 // route for adding a note
@@ -40,24 +36,17 @@ notesRouter.post("/", async (request, response, next) => {
     important: body.important || false,
   });
 
-  try {
-    const savedNote = await note.save();
-    response.status(201).json(savedNote);
-  } catch (exception) {
-    next(exception);
-  }
+  const savedNote = await note.save();
+  response.status(201).json(savedNote);
 });
 
 // route for deleting resources
-notesRouter.delete("/:id", (request, response, next) => {
-  Note.findByIdAndRemove(request.params.id)
-    .then(() => {
-      // If deleting is successful, we response with code 204 no content and return no data with the response
-      // There's no consensus on what status should be returned if the resource does note exist
-      // we could either use 404 or 204. Here we use 204 for simplicity sake
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+notesRouter.delete("/:id", async (request, response, next) => {
+  await Note.findByIdAndRemove(request.params.id);
+  // If deleting is successful, we response with code 204 no content and return no data with the response
+  // There's no consensus on what status should be returned if the resource does note exist
+  // we could either use 404 or 204. Here we use 204 for simplicity sake
+  response.status(204).end();
 });
 
 notesRouter.put("/:id", (request, response, next) => {
