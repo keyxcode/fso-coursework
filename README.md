@@ -115,6 +115,7 @@
   npm install mongoose
   npm install dotenv
   npm install --save-dev jest
+  npm install express-async-errors
   ```
 
   - Useful configs
