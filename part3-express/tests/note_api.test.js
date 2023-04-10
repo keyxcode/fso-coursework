@@ -23,7 +23,7 @@ beforeEach(async () => {
   await noteObject.save();
   noteObject = new Note(initialNotes[1]);
   await noteObject.save();
-});
+}, 100000);
 
 test("notes are returned as json", async () => {
   await api
