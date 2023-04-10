@@ -48,6 +48,7 @@ test("a specific note is within the returned notes", async () => {
 });
 
 // afterAll() function of Jest is used to close the connect to the db after the tests
+// note that this function might not run if we run a single test
 afterAll(async () => {
   await mongoose.connection.close();
 });

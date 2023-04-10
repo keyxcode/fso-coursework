@@ -6,13 +6,12 @@ const notesRouter = require("express").Router(); // Create a router object
 const Note = require("../models/note");
 
 // defines an event handler that handles HTTP GET requests made to the notes path of the application
-notesRouter.get("/", (request, response) => {
+notesRouter.get("/", async (request, response) => {
   // express automatically sets the Content-Type header to application/json
   // express also JSON.stringify the notes object automatically
 
-  Note.find({}).then((notes) => {
-    response.json(notes);
-  });
+  const notes = await Note.find({});
+  response.json(notes);
 });
 
 // We can define parameters for routes in express by the colon :syntax
