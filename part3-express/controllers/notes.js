@@ -13,7 +13,7 @@ notesRouter.get("/", async (request, response) => {
   // express automatically sets the Content-Type header to application/json
   // express also JSON.stringify the notes object automatically
 
-  const notes = await Note.find({});
+  const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
   response.json(notes);
 });
 
