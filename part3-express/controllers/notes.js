@@ -5,6 +5,7 @@
 // Every Express application has a built-in app router.
 const notesRouter = require("express").Router(); // Create a router object
 
+const jwt = require("jsonwebtoken");
 const Note = require("../models/note");
 const User = require("../models/user");
 
@@ -29,11 +30,25 @@ notesRouter.get("/:id", async (request, response) => {
   }
 });
 
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
+
 // route for adding a note
 notesRouter.post("/", async (request, response) => {
   const { body } = request;
 
-  const user = await User.findById(body.userId);
+  // If the token is missing or it is invalid, the exception JsonWebTokenError will raised
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const note = new Note({
     content: body.content,

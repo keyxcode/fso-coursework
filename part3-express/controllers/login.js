@@ -25,9 +25,14 @@ loginRouter.post("/", async (request, response) => {
 
   // If the password is correct, a token is created with the method jwt.sign()
   // The token contains the username and the user id in a digitally signed form
-  const token = jwt.sign(userForToken, process.env.SECRET);
+  const token = jwt.sign(
+    userForToken,
+    process.env.SECRET,
+    // token expires in 60*60 seconds, that is, in one hour
+    { expiresIn: 60 * 60 }
+  );
 
-  response
+  return response
     .status(200)
     .send({ token, username: user.username, name: user.name });
 });
