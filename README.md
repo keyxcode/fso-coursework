@@ -101,6 +101,10 @@
 - CORS is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain outside the domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.
 - Practically, in Express we solve this issue by using the cors middleware: `npm install cors`
 
+# Token authentication
+
+![image](imgs/token-authentication.png)
+
 # Node/ Express project tips
 
 - It's customary to run tasks as npm scripts
@@ -116,6 +120,8 @@
   npm install dotenv
   npm install --save-dev jest
   npm install express-async-errors
+  npm install bcrypt
+  npm install mongoose-unique-validator
   ```
 
   - Useful configs
