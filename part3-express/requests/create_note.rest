@@ -28,3 +28,13 @@ Content-Type: application/json
     "content": "Update me",
     "important": true
 }
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "I have a user id",
+    "important": true,
+    "userId": "6434ad5414052b2656767635"
+}

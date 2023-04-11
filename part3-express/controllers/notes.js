@@ -1,9 +1,12 @@
+/* eslint-disable no-underscore-dangle */
+
 // A router object is an isolated instance of middleware and routes.
 // You can think of it as a “mini-application,” capable only of performing middleware and routing functions.
 // Every Express application has a built-in app router.
 const notesRouter = require("express").Router(); // Create a router object
 
 const Note = require("../models/note");
+const User = require("../models/user");
 
 // defines an event handler that handles HTTP GET requests made to the notes path of the application
 notesRouter.get("/", async (request, response) => {
@@ -27,21 +30,27 @@ notesRouter.get("/:id", async (request, response) => {
 });
 
 // route for adding a note
-notesRouter.post("/", async (request, response, next) => {
+notesRouter.post("/", async (request, response) => {
   const { body } = request;
+
+  const user = await User.findById(body.userId);
 
   const note = new Note({
     content: body.content,
     // when the important property is false, this expression returns the false from the right-hand side
     important: body.important || false,
+    user: user.id,
   });
 
   const savedNote = await note.save();
+  user.notes = user.notes.concat(savedNote._id);
+  await user.save();
+
   response.status(201).json(savedNote);
 });
 
 // route for deleting resources
-notesRouter.delete("/:id", async (request, response, next) => {
+notesRouter.delete("/:id", async (request, response) => {
   await Note.findByIdAndRemove(request.params.id);
   // If deleting is successful, we response with code 204 no content and return no data with the response
   // There's no consensus on what status should be returned if the resource does note exist
