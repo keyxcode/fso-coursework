@@ -58,3 +58,13 @@ Authorization: Bearer 123
     "content": "I have a user id",
     "important": true
 }
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0MzRhZDU0MTQwNTJiMjY1Njc2NzYzNSIsImlhdCI6MTY4MTE3NzkzMH0.wf8y4GeeEhBNB9NzzylSVZkosc9J6atVsWjZ8e1klhQ
+
+{
+    "content": "hi",
+    "important": true
+}

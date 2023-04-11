@@ -40,6 +40,7 @@ const getTokenFrom = (request) => {
 
 // route for adding a note
 notesRouter.post("/", async (request, response) => {
+  console.log(request.headers);
   const { body } = request;
 
   // If the token is missing or it is invalid, the exception JsonWebTokenError will raised
@@ -61,7 +62,7 @@ notesRouter.post("/", async (request, response) => {
   user.notes = user.notes.concat(savedNote._id);
   await user.save();
 
-  response.status(201).json(savedNote);
+  return response.status(201).json(savedNote);
 });
 
 // route for deleting resources

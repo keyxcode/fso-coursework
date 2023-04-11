@@ -72,6 +72,7 @@
 - In express, routes get _request_ and _response_ objects that have information about how to process the request and how to render the response
   - _request_ will have information like query parameters (the part after the & in a URL), a body if you need to get form POST info, accepted language or encoding information, etc.
   - _response_ is ultimately responsible for deciding what data (typically a string of HTML or JSON, etc) gets sent to the client.
+- The `.get()` method and `headers` property may come in handy for inspecting the request object.
 - Between those 2 endpoints, we might need to do some stuff: hit a database, authenticate a user, validate a token, select display text from a localization tool, etc. Most of the time, those processes are repeated on every route and every request. In order to keep them flexible, reusable, ordered and so on, each type of processing can be broken out into a _Middleware_ function.
 
 # Middleware
@@ -101,6 +102,14 @@
 - CORS is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain outside the domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.
 - Practically, in Express we solve this issue by using the cors middleware: `npm install cors`
 
+# Deploying
+
+- Setup ready for deployment
+  ![image](imgs/ready.png)
+
+- Set up on PaaS
+  ![image](imgs/on-paas.png)
+
 # Token authentication
 
 ![image](imgs/token-authentication.png)
@@ -124,53 +133,53 @@
   npm install mongoose-unique-validator
   ```
 
-  - Useful configs
+- Useful configs
 
-  ```
-  {
-    "scripts": {
-      "start": "node index.js",
-      "dev": "nodemon index.js",
-      "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
-      "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-      "lint": "eslint .",
-      "test": "jest --verbose"
-    },
-    "proxy": "http://localhost:3001",
-    "jest": {
-      "testEnvironment": "node"
-    }
+```
+{
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "lint": "eslint .",
+    "test": "NODE_ENV=test jest --verbose --runInBand"
+  },
+  "proxy": "http://localhost:3001",
+  "jest": {
+    "testEnvironment": "node"
   }
-  ```
+}
+```
 
-  - Linting and formatting
+- Linting and formatting
 
-  ```
-    npm install eslint --save-dev
-    npx eslint --init
-    npm install --save-dev --save-exact prettier
-    echo {}> .prettierrc.json
-    npm install --save-dev eslint-config-prettier
-  ```
+```
+  npm install eslint --save-dev
+  npx eslint --init
+  npm install --save-dev --save-exact prettier
+  echo {}> .prettierrc.json
+  npm install --save-dev eslint-config-prettier
+```
 
-  ```
-  {
-    'env': {
-      'commonjs': true,
-      'es2021': true,
-      'node': true,
-      'jest': true,
-    },
-    "rules" : {
-      "no-console": "off"
-    },
-    "extends": ["some-other-config-you-use", "prettier"]
-  }
-  ```
+```
+{
+  'env': {
+    'commonjs': true,
+    'es2021': true,
+    'node': true,
+    'jest': true,
+  },
+  "rules" : {
+    "no-console": "off"
+  },
+  "extends": ["some-other-config-you-use", "prettier"]
+}
+```
 
-  - Potential ignores
+- Potential ignores
 
-  ```
-    build
-    node_modules/
-  ```
+```
+  build
+  node_modules/
+```
