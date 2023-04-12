@@ -13,7 +13,6 @@ const App = () => {
   // Store the notes in the App component's state
   // init the state with the initial notes passed in the props
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -36,16 +35,9 @@ const App = () => {
     }
   }, []);
 
-  const addNote = (event) => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-    };
-
+  const addNote = (noteObject) => {
     noteService.create(noteObject).then((returnedNote) => {
       setNotes(notes.concat(returnedNote));
-      setNewNote("");
     });
   };
 
@@ -71,10 +63,6 @@ const App = () => {
         }, 5000);
         setNotes(notes.filter((n) => n.id !== id));
       });
-  };
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
   };
 
   const handleLogin = async (event) => {
@@ -107,6 +95,7 @@ const App = () => {
 
       {!user && (
         <Togglable buttonLabel="log in">
+          {/* LoginForm is a child component of Togglable */}
           <LoginForm
             username={username}
             password={password}
@@ -121,11 +110,7 @@ const App = () => {
         <div>
           <p>{user.name} logged in</p>
           <Togglable buttonLabel="new note">
-            <NoteForm
-              onSubmit={addNote}
-              value={newNote}
-              handleChange={handleNoteChange}
-            />
+            <NoteForm createNote={addNote} />
           </Togglable>
         </div>
       )}
