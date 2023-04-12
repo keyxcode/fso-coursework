@@ -1,18 +1,19 @@
 const LoginForm = ({
-  handleLogin,
+  handleSubmit,
   username,
   password,
-  setUsername,
-  setPassword,
+  handleUsernameChange,
+  handlePasswordChange,
 }) => (
-  <form onSubmit={handleLogin}>
+  <form onSubmit={handleSubmit}>
+    <h2>Login</h2>
     <div>
       username
       <input
         type="text"
         value={username}
         name="Username"
-        onChange={({ target }) => setUsername(target.value)}
+        onChange={handleUsernameChange}
       />
     </div>
     <div>
@@ -22,7 +23,7 @@ const LoginForm = ({
         value={password}
         name="Password"
         // destructure the event directly to get the target
-        onChange={({ target }) => setPassword(target.value)}
+        onChange={handlePasswordChange}
       />
     </div>
     <button type="submit">login</button>
