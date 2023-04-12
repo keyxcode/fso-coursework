@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
@@ -33,7 +33,13 @@ const App = () => {
     }
   }, []);
 
+  // useRef() hook is used to create a ref to another component
+  // the noteFormRef variable acts as a reference to <Togglable />
+  const noteFormRef = useRef();
+
   const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility();
+
     noteService.create(noteObject).then((returnedNote) => {
       setNotes(notes.concat(returnedNote));
     });
@@ -97,7 +103,7 @@ const App = () => {
       {user && (
         <div>
           <p>{user.name} logged in</p>
-          <Togglable buttonLabel="new note">
+          <Togglable buttonLabel="new note" ref={noteFormRef}>
             <NoteForm createNote={addNote} />
           </Togglable>
         </div>
