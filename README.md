@@ -153,6 +153,9 @@
 }
 ```
 
+- Linting for an CRA frontend
+  `npm install --save-dev eslint-plugin-jest`
+
 - Linting and formatting
 
 ```

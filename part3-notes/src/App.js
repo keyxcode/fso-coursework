@@ -27,9 +27,9 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      noteService.setToken(user.token);
+      const currentUser = JSON.parse(loggedUserJSON);
+      setUser(currentUser);
+      noteService.setToken(currentUser.token);
     }
   }, []);
 
@@ -47,13 +47,16 @@ const App = () => {
 
   const login = async ({ username, password }) => {
     try {
-      const user = await loginService.login({
+      const currentUser = await loginService.login({
         username,
         password,
       });
-      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
-      noteService.setToken(user.token);
-      setUser(user);
+      window.localStorage.setItem(
+        "loggedNoteappUser",
+        JSON.stringify(currentUser)
+      );
+      noteService.setToken(currentUser.token);
+      setUser(currentUser);
     } catch (exception) {
       setErrorMessage("Wrong credentials");
       setTimeout(() => {
@@ -75,7 +78,7 @@ const App = () => {
       .then((returnedNote) => {
         setNotes(notes.map((n) => (n.id !== id ? n : returnedNote)));
       })
-      .catch((err) => {
+      .catch(() => {
         setErrorMessage(
           `Note '${note.content}' was already removed from server`
         );

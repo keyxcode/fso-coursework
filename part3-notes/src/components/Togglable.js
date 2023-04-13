@@ -15,11 +15,9 @@ const Togglable = forwardRef((props, refs) => {
 
   // useImperativeHandle() is a React hook
   // used for defining functions in a component, which can be invoked from outside of the component
-  useImperativeHandle(refs, () => {
-    return {
-      toggleVisibility,
-    };
-  });
+  useImperativeHandle(refs, () => ({
+    toggleVisibility,
+  }));
 
   return (
     <div>
@@ -40,5 +38,7 @@ const Togglable = forwardRef((props, refs) => {
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
 };
+
+Togglable.displayName = "Togglable";
 
 export default Togglable;
