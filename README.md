@@ -41,6 +41,13 @@
 
 - Create individual components that are as independent and reusable as possible => HTML, CSS, JS all in one component
 
+# React testing
+
+```
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+npm install --save-dev @testing-library/user-event
+```
+
 # REST
 
 - Representational State Transfer introduced in 2000 by Roy Fielding

@@ -24,7 +24,7 @@ const Togglable = forwardRef((props, refs) => {
       <div style={hideWhenVisible}>
         <button onClick={toggleVisibility}>{props.buttonLabel}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="togglableContent">
         {/* props.children is a special prop */}
         {/* It's an array of children React components that are jammed between <Togglable><Children /></Togglable> */}
         {/* If a component is self closing then the children array is empty */}
