@@ -2,7 +2,6 @@
 
 - Never define components inside of another component
 - A state update in React happens asynchronously, i.e. not immediately but "at some point" before the component is rendered again
-- To expect and require props for a component, use prop-types `npm install prop-types`
 
 # States
 
@@ -122,11 +121,22 @@ npm install --save-dev @testing-library/user-event
 
 ![image](imgs/token-authentication.png)
 
-# Node/ Express project tips
+# Node project tips
 
 - It's customary to run tasks as npm scripts
 - To debug node app in the browser: `node --inspect index.js`
-- Useful commands
+
+- Useful CRA commands
+
+```
+npm install prop-types
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+npm install --save-dev @testing-library/user-event
+CI=true npm test
+CI=true npm test -- --coverage
+```
+
+- Useful Express commands
 
   ```
   npm init -y
@@ -141,7 +151,7 @@ npm install --save-dev @testing-library/user-event
   npm install mongoose-unique-validator
   ```
 
-- Useful configs
+- Useful Express configs
 
 ```
 {
@@ -160,8 +170,7 @@ npm install --save-dev @testing-library/user-event
 }
 ```
 
-- Linting for an CRA frontend
-  `npm install --save-dev eslint-plugin-jest`
+- Linting for an CRA app `npm install --save-dev eslint-plugin-jest`
 
 - Linting and formatting
 
@@ -172,6 +181,8 @@ npm install --save-dev @testing-library/user-event
   echo {}> .prettierrc.json
   npm install --save-dev eslint-config-prettier
 ```
+
+- ESLint configs
 
 ```
 {
