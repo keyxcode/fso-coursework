@@ -128,13 +128,16 @@ npm install --save-dev @testing-library/user-event
 
 - Useful CRA commands
 
-```
-npm install prop-types
-npm install --save-dev @testing-library/react @testing-library/jest-dom
-npm install --save-dev @testing-library/user-event
-CI=true npm test
-CI=true npm test -- --coverage
-```
+  ```
+  npm install prop-types
+  npm install --save-dev @testing-library/react @testing-library/jest-dom
+  npm install --save-dev @testing-library/user-event
+  npm install --save-dev cypress
+  npm install eslint-plugin-cypress --save-dev
+
+  CI=true npm test
+  CI=true npm test -- --coverage
+  ```
 
 - Useful Express commands
 
@@ -191,7 +194,11 @@ CI=true npm test -- --coverage
     'es2021': true,
     'node': true,
     'jest': true,
+    "cypress/globals": true
   },
+  "plugins": [
+    "react", "jest", "cypress"
+  ],
   "rules" : {
     "no-console": "off"
   },

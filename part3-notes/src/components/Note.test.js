@@ -21,6 +21,7 @@ test("renders content", () => {
   expect(element).toBeDefined();
 
   // another method is to use CSS selectors to find the rendered element
+  // the object container is one of the fields returned by render()
   const { container } = render(<Note note={note} />);
 
   const div = container.querySelector(".note");
