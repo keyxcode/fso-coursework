@@ -1,8 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-
-import { createStore } from "redux";
-
 // The state is now an Array
 // NEW_NOTE-type actions cause a new note to be added to the state
 // reducers must be pure functions
@@ -24,41 +19,25 @@ const noteReducer = (state = [], action) => {
   }
 };
 
-const store = createStore(noteReducer);
+const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
-store.dispatch({
-  // The general convention is that actions have exactly two fields:
-  //      - type: type of action
-  //      - payload: containing the data included with the action.
-  type: "NEW_NOTE",
-  payload: {
-    content: "the app state is in redux store",
-    important: true,
-    id: 1,
-  },
-});
+//  action creators
+export const createNote = (content) => {
+  return {
+    type: "NEW_NOTE",
+    payload: {
+      content,
+      important: false,
+      id: generateId(),
+    },
+  };
+};
 
-store.dispatch({
-  type: "NEW_NOTE",
-  payload: {
-    content: "state changes are made with actions",
-    important: false,
-    id: 2,
-  },
-});
-
-const App = () => {
-  return (
-    <div>
-      <ul>
-        {store.getState().map((note) => (
-          <li key={note.id}>
-            {note.content} <strong>{note.important ? "important" : ""}</strong>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+export const toggleImportanceOf = (id) => {
+  return {
+    type: "TOGGLE_IMPORTANCE",
+    payload: { id },
+  };
 };
 
 export default noteReducer;

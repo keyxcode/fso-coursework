@@ -136,6 +136,7 @@ npm install --save-dev @testing-library/user-event
   npm install eslint-plugin-cypress --save-dev
   npm install redux
   npm install --save-dev deep-freeze
+  npm install react-redux
 
   CI=true npm test
   CI=true npm test -- --coverage
