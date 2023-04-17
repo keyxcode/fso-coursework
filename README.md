@@ -137,6 +137,7 @@ npm install --save-dev @testing-library/user-event
   npm install redux
   npm install --save-dev deep-freeze
   npm install react-redux
+  npm install @reduxjs/toolkit
 
   CI=true npm test
   CI=true npm test -- --coverage
