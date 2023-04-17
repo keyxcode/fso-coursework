@@ -17,8 +17,14 @@ const Notes = () => {
   const dispatch = useDispatch();
 
   // useSelector() hook provides access to the store state (in this case a notes array)
-  // Here we need all of the notes, so our selector() returns the whole state
-  const notes = useSelector((state) => state);
+  const notes = useSelector((state) => {
+    if (state.filter === "ALL") {
+      return state.notes;
+    }
+    return state.filter === "IMPORTANT"
+      ? state.notes.filter((note) => note.important)
+      : state.notes.filter((note) => !note.important);
+  });
 
   // In other cases, we may do more interesting thing such as:
   //    const importantNotes = useSelector(state => state.filter(note => note.important))
