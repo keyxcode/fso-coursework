@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import noteService from "../services/notes";
 
 const noteSlice = createSlice({
   // The name parameter defines the prefix which is used in the action's type values
@@ -6,10 +7,6 @@ const noteSlice = createSlice({
   name: "notes",
   initialState: [],
   reducers: {
-    createNote(state, action) {
-      // Redux Toolkit makes it possible to mutate the state argument inside the reducer
-      state.push(action.payload);
-    },
     toggleImportanceOf(state, action) {
       const id = action.payload;
       const noteToChange = state.find((n) => n.id === id);
@@ -32,6 +29,20 @@ const noteSlice = createSlice({
 });
 
 // createSlice() returns an object containing the reducer as well as the action creators defined by the reducers parameter
-export const { createNote, toggleImportanceOf, appendNote, setNotes } =
-  noteSlice.actions;
+export const { toggleImportanceOf, appendNote, setNotes } = noteSlice.actions;
+
+export const initializeNotes = () => {
+  return async (dispatch) => {
+    const notes = await noteService.getAll();
+    dispatch(setNotes(notes));
+  };
+};
+
+export const createNote = (content) => {
+  return async (dispatch) => {
+    const newNote = await noteService.createNew(content);
+    dispatch(appendNote(newNote));
+  };
+};
+
 export default noteSlice.reducer;
