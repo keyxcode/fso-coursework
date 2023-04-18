@@ -47,6 +47,59 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom
 npm install --save-dev @testing-library/user-event
 ```
 
+# Redux
+
+- In front-end frameworks like React, Angular or Vue, each component internally manages their own states. As the app gets more complex, managing states across many components becomes tedious and difficult. Redux became the solution to this issue.
+- Redux works by providing a centralized 'store', which holds all the states within the app. Each component in the app can access this store without having to pass props around in the component tree.
+
+  ![image](imgs/redux.avif)
+
+- The Redux workflow
+
+  ![image](imgs/redux-workflow.avif)
+
+- _Store_ is the main, central bucket which stores all the states of an application. It is stored in the form of a JS object tree in a single store as shown below.
+
+  ```js
+  // this is how the store object structure looks like
+  {
+      noOfItemInCart: 2,
+      cart: [
+          {
+              bookName: "Harry Potter and the Chamber of Secrets",
+              noOfItem: 1,
+          },
+          {
+              bookName: "Harry Potter and the Prisoner of Azkaban",
+              noOfItem: 1
+          }
+      ]
+  }
+  ```
+
+- _Actions_ are JavaScript objects with a required `type` property and can include custom properties where needed. They are only used to describe what happened to the state, they are not responsible for changing them.
+
+  ```js
+  const dispatch = useDispatch()
+
+  // action creator
+  const addItemToCart = () => {
+  return {
+      type: "ADD_ITEM_TO_CART"
+      payload: {
+          bookName: "Harry Potter and the Goblet of Fire",
+          noOfItem: 1,
+          }
+      }
+  }
+
+  <button onClick = {() => dispatch(addItemToCart())}>Add to cart</button>
+  ```
+
+- _Reducers_ are pure functions that takes in the current value of a state, whose sole job is to accept two things (the action and the current state of the application) and return a new updated instance of the state.
+
+  ![image](imgs/redux-reducer.png)
+
 # REST
 
 - Representational State Transfer introduced in 2000 by Roy Fielding
@@ -59,6 +112,7 @@ npm install --save-dev @testing-library/user-event
   - If we define the resource type of note to be notes, then the address of a note resource with the identifier 10, has the unique address _www.example.com/api/notes/10_
   - The URL for the entire collection of all note resources is _www.example.com/api/notes_
 - We can execute different operations on the resources, defined by HTTP verb
+
   ![image](imgs/rest-operations.png)
 
 # HTTP standards
@@ -112,9 +166,11 @@ npm install --save-dev @testing-library/user-event
 # Deploying
 
 - Setup ready for deployment
+
   ![image](imgs/ready.png)
 
 - Set up on PaaS
+
   ![image](imgs/on-paas.png)
 
 # Token authentication
@@ -160,59 +216,59 @@ npm install --save-dev @testing-library/user-event
 
 - Useful Express configs
 
-```
-{
-  "scripts": {
-    "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=development nodemon index.js",
-    "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-    "lint": "eslint .",
-    "test": "NODE_ENV=test jest --verbose --runInBand"
-  },
-  "proxy": "http://localhost:3001",
-  "jest": {
-    "testEnvironment": "node"
+  ```
+  {
+    "scripts": {
+      "start": "NODE_ENV=production node index.js",
+      "dev": "NODE_ENV=development nodemon index.js",
+      "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
+      "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+      "lint": "eslint .",
+      "test": "NODE_ENV=test jest --verbose --runInBand"
+    },
+    "proxy": "http://localhost:3001",
+    "jest": {
+      "testEnvironment": "node"
+    }
   }
-}
-```
+  ```
 
 - Linting for an CRA app `npm install --save-dev eslint-plugin-jest`
 
 - Linting and formatting
 
-```
-  npm install eslint --save-dev
-  npx eslint --init
-  npm install --save-dev --save-exact prettier
-  echo {}> .prettierrc.json
-  npm install --save-dev eslint-config-prettier
-```
+  ```
+    npm install eslint --save-dev
+    npx eslint --init
+    npm install --save-dev --save-exact prettier
+    echo {}> .prettierrc.json
+    npm install --save-dev eslint-config-prettier
+  ```
 
 - ESLint configs
 
-```
-{
-  'env': {
-    'commonjs': true,
-    'es2021': true,
-    'node': true,
-    'jest': true,
-    "cypress/globals": true
-  },
-  "plugins": [
-    "react", "jest", "cypress"
-  ],
-  "rules" : {
-    "no-console": "off"
-  },
-  "extends": ["some-other-config-you-use", "prettier"]
-}
-```
+  ```
+  {
+    'env': {
+      'commonjs': true,
+      'es2021': true,
+      'node': true,
+      'jest': true,
+      "cypress/globals": true
+    },
+    "plugins": [
+      "react", "jest", "cypress"
+    ],
+    "rules" : {
+      "no-console": "off"
+    },
+    "extends": ["some-other-config-you-use", "prettier"]
+  }
+  ```
 
 - Potential ignores
 
-```
-  build
-  node_modules/
-```
+  ```
+    build
+    node_modules/
+  ```
