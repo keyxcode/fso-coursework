@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const generateId = () => Number((Math.random() * 1000000).toFixed(0));
-
 const noteSlice = createSlice({
   // The name parameter defines the prefix which is used in the action's type values
   // this is to avoid naming collision
@@ -9,14 +7,8 @@ const noteSlice = createSlice({
   initialState: [],
   reducers: {
     createNote(state, action) {
-      const content = action.payload;
-
       // Redux Toolkit makes it possible to mutate the state argument inside the reducer
-      state.push({
-        content,
-        important: false,
-        id: generateId(),
-      });
+      state.push(action.payload);
     },
     toggleImportanceOf(state, action) {
       const id = action.payload;
