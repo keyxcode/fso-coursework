@@ -101,8 +101,14 @@ npm install --save-dev @testing-library/user-event
   ![image](imgs/redux-reducer.png)
 
 # Redux Toolkit
+
 - Redux Toolkit helps us write reducers and actions in a single slice => cleaner and faster.
 - We can mutate states directly in RTK thanks to its internal usage of the Immer library.
+
+# React Query
+
+- A library to store and manage data retrieved from the server.
+- It maintains the server state in the frontend, i.e. acts as a cache for what is stored on the server.
 
 # REST
 
