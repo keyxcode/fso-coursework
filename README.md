@@ -9,7 +9,7 @@
 
 # Hooks
 
-- `useState()` as well as the `useEffect()` must not be called from inside of:
+- Hooks must not be called from inside of:
   - a loop
   - a conditional expression
   - any place that is not a function defining a component
