@@ -1,4 +1,19 @@
 import { useState } from "react";
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  TextField,
+  Button,
+  Alert,
+  AppBar,
+  Toolbar,
+  IconButton,
+} from "@mui/material";
 
 import {
   Routes,
@@ -46,14 +61,21 @@ const Note = ({ note }) => {
 const Notes = ({ notes }) => (
   <div>
     <h2>Notes</h2>
-    <ul>
-      {notes.map((note) => (
-        <li key={note.id}>
-          {/* The ability to click a name is implemented with the component Link */}
-          <Link to={`/notes/${note.id}`}>{note.content}</Link>
-        </li>
-      ))}
-    </ul>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          {notes.map((note) => (
+            <TableRow key={note.id}>
+              <TableCell>
+                {/* The ability to click a name is implemented with the component Link */}
+                <Link to={`/notes/${note.id}`}>{note.content}</Link>
+              </TableCell>
+              <TableCell>{note.user}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   </div>
 );
 
@@ -84,12 +106,16 @@ const Login = (props) => {
       <h2>login</h2>
       <form onSubmit={onSubmit}>
         <div>
-          username: <input />
+          <TextField label="username" />
         </div>
         <div>
-          password: <input type="password" />
+          <TextField label="password" type="password" />
         </div>
-        <button type="submit">login</button>
+        <div>
+          <Button variant="contained" color="primary" type="submit">
+            login
+          </Button>
+        </div>
       </form>
     </div>
   );
@@ -116,8 +142,8 @@ const App = () => {
       user: "Arto Hellas",
     },
   ]);
-
   const [user, setUser] = useState(null);
+  const [message, setMessage] = useState(null);
 
   // Every time the component is rendered, so practically every time the browser's URL changes, the following command is executed
   // If the URL matches /notes/:id, the match variable will contain an object
@@ -130,6 +156,10 @@ const App = () => {
 
   const login = (user) => {
     setUser(user);
+    setMessage(`welcome ${user}`);
+    setTimeout(() => {
+      setMessage(null);
+    }, 10000);
   };
 
   const padding = {
@@ -137,46 +167,52 @@ const App = () => {
   };
 
   return (
-    <div>
-      {/* Inside the router, we define links that modify the address bar with the Link component. */}
+    <Container>
       <div>
-        <Link style={padding} to="/">
-          home
-        </Link>
-        <Link style={padding} to="/notes">
-          notes
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        {user ? (
-          <em>{user} logged in</em>
-        ) : (
-          <Link style={padding} to="/login">
-            login
-          </Link>
-        )}
-      </div>
+        <AppBar position="static">
+          <Toolbar>
+            {/* Inside the router, we define links that modify the address bar with the Link component. */}
+            <Button color="inherit" component={Link} to="/">
+              home
+            </Button>
+            <Button color="inherit" component={Link} to="/notes">
+              notes
+            </Button>
+            <Button color="inherit" component={Link} to="/users">
+              users
+            </Button>
+            {user ? (
+              <em>{user} logged in</em>
+            ) : (
+              <Button color="inherit" component={Link} to="/login">
+                login
+              </Button>
+            )}
+          </Toolbar>
+        </AppBar>
 
-      {/* The Routes works by rendering the first component whose path matches the URL in the browser's address bar. */}
-      {/* Components rendered based on the URL of the browser are defined with the component Route. */}
-      <Routes>
-        {/* We define parameterized URLs in the routing in App component as follows */}
-        <Route path="/notes/:id" element={<Note note={note} />} />
-        <Route path="/notes" element={<Notes notes={notes} />} />
-        {/* If a user isn't logged in, redirect using the component Navigate */}
-        <Route
-          path="/users"
-          element={user ? <Users /> : <Navigate replace to="/login" />}
-        />
-        <Route path="/login" element={<Login onLogin={login} />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
-      <footer>
-        <br />
-        <em>Note app, Department of Computer Science 2023</em>
-      </footer>
-    </div>
+        {message && <Alert severity="success">{message}</Alert>}
+
+        {/* The Routes works by rendering the first component whose path matches the URL in the browser's address bar. */}
+        {/* Components rendered based on the URL of the browser are defined with the component Route. */}
+        <Routes>
+          {/* We define parameterized URLs in the routing in App component as follows */}
+          <Route path="/notes/:id" element={<Note note={note} />} />
+          <Route path="/notes" element={<Notes notes={notes} />} />
+          {/* If a user isn't logged in, redirect using the component Navigate */}
+          <Route
+            path="/users"
+            element={user ? <Users /> : <Navigate replace to="/login" />}
+          />
+          <Route path="/login" element={<Login onLogin={login} />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+        <footer>
+          <br />
+          <em>Note app, Department of Computer Science 2023</em>
+        </footer>
+      </div>
+    </Container>
   );
 };
 
