@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styled from "styled-components";
 import {
   Container,
   Table,
@@ -14,7 +15,6 @@ import {
   Toolbar,
   IconButton,
 } from "@mui/material";
-
 import {
   Routes,
   Route,
@@ -162,9 +162,11 @@ const App = () => {
     }, 10000);
   };
 
-  const padding = {
-    padding: 5,
-  };
+  const Footer = styled.div`
+    background: Chocolate;
+    padding: 1em;
+    margin-top: 1em;
+  `;
 
   return (
     <Container>
@@ -207,10 +209,12 @@ const App = () => {
           <Route path="/login" element={<Login onLogin={login} />} />
           <Route path="/" element={<Home />} />
         </Routes>
-        <footer>
+
+        {/* styled Footer component */}
+        <Footer>
           <br />
           <em>Note app, Department of Computer Science 2023</em>
-        </footer>
+        </Footer>
       </div>
     </Container>
   );
