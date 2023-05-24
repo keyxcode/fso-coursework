@@ -282,3 +282,9 @@ npm install --save-dev @testing-library/user-event
     build
     node_modules/
   ```
+
+# TypeScript
+
+- ![image](imgs/typescript-parts.png)
+
+- `npm install --save-dev ts-node typescript`
