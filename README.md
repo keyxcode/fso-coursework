@@ -286,5 +286,72 @@ npm install --save-dev @testing-library/user-event
 # TypeScript
 
 - ![image](imgs/typescript-parts.png)
+- Startup a backend project
+  ```
+  npm init -y
+  npm install typescript --save-dev
+  npm run tsc -- --init
+  npm install express
+  npm install --save-dev eslint @types/express @typescript-eslint/eslint-plugin @typescript-eslint/parser
+  ```
 
-- `npm install --save-dev ts-node typescript`
+- package.json scripts
+  ```
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev index.ts",
+    "lint": "eslint --ext .ts .",
+    "start": "node build/index.js"
+  },
+  ```
+
+- tsconfig.json
+  ```
+  {
+    "compilerOptions": {
+      "target": "ES6",
+      "outDir": "./build/",
+      "module": "commonjs",
+      "strict": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "esModuleInterop": true
+    }
+  }
+  ```
+
+- .eslintrc
+  ```
+  {
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "plugins": ["@typescript-eslint"],
+    "env": {
+      "browser": true,
+      "es6": true,
+      "node": true
+    },
+    "rules": {
+      "@typescript-eslint/semi": ["error"],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/restrict-plus-operands": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { "argsIgnorePattern": "^_" }
+      ],
+      "no-case-declarations": "off"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    }
+  }
+  ```
